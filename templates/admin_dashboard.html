@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SmartAttend AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f6fc;
+            color: #1e293b;
+        }
+
+        .sidebar {
+            width: 255px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #111827;
+            padding: 28px 18px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 800;
+            padding: 5px 12px 35px;
+        }
+
+        .logo span {
+            color: #818cf8;
+        }
+
+        .nav-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 10px 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 13px;
+            margin: 5px 0;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+            transition: .3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #3730a3;
+            color: white;
+        }
+
+        .nav-icon {
+            font-size: 19px;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout {
+            display: block;
+            background: #991b1b;
+            color: white;
+            text-align: center;
+            padding: 13px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .main {
+            margin-left: 255px;
+            padding: 30px 38px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h2 {
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .admin-badge {
+            background: white;
+            padding: 10px 17px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 3px 12px #00000008;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #4338ca, #7c3aed, #9333ea);
+            padding: 35px;
+            border-radius: 18px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 30px #6d28d933;
+        }
+
+        .welcome h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            color: #ede9fe;
+            font-size: 14px;
+        }
+
+        .section-heading {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            border: 1px solid #edf0f7;
+            box-shadow: 0 5px 20px #00000006;
+            transition: .3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px #00000012;
+            border-color: #c7d2fe;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            font-size: 23px;
+            margin-bottom: 20px;
+        }
+
+        .purple { background: #ede9fe; }
+        .blue { background: #dbeafe; }
+        .green { background: #dcfce7; }
+        .orange { background: #ffedd5; }
+        .pink { background: #fce7f3; }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
+            min-height: 44px;
+        }
+
+        .card a {
+            display: inline-block;
+            color: #4f46e5;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 18px;
+        }
+
+        .card a:hover {
+            color: #7c3aed;
+        }
+
+        .footer {
+            margin-top: 35px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        @media(max-width: 850px) {
+            .sidebar {
+                width: 75px;
+                padding: 22px 10px;
+            }
+
+            .logo {
+                font-size: 0;
+                text-align: center;
+                padding: 10px 0 30px;
+            }
+
+            .logo span {
+                font-size: 20px;
+            }
+
+            .nav-title, .nav-text, .logout-text {
+                display: none;
+            }
+
+            .nav-link {
+                justify-content: center;
+                padding: 14px 5px;
+            }
+
+            .nav-icon {
+                font-size: 21px;
+            }
+
+            .sidebar-bottom {
+                left: 10px;
+                right: 10px;
+            }
+
+            .logout {
+                font-size: 20px;
+                padding: 12px 5px;
+            }
+
+            .main {
+                margin-left: 75px;
+                padding: 25px 18px;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .welcome {
+                padding: 25px 20px;
+            }
+
+            .welcome h1 {
+                font-size: 22px;
+            }
+
+            .topbar h2 {
+                font-size: 18px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="logo">SmartAttend <span>AI</span></div>
+
+    <div class="nav-title">MAIN MENU</div>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-link active">
+        <span class="nav-icon">⌂</span>
+        <span class="nav-text">Dashboard</span>
+    </a>
+
+    <a href="{{ url_for('student.student_list') }}" class="nav-link">
+        <span class="nav-icon">🎓</span>
+        <span class="nav-text">Students</span>
+    </a>
+
+    <a href="{{ url_for('teacher.teacher_list') }}" class="nav-link">
+        <span class="nav-icon">👨‍🏫</span>
+        <span class="nav-text">Teachers</span>
+    </a>
+
+    <a href="{{ url_for('subject.subject_list') }}" class="nav-link">
+        <span class="nav-icon">📚</span>
+        <span class="nav-text">Subjects</span>
+    </a>
+
+    <a href="{{ url_for('enrollment.enrollment_list') }}" class="nav-link">
+        <span class="nav-icon">📝</span>
+        <span class="nav-text">Enrollments</span>
+    </a>
+
+    <a href="{{ url_for('admin_reports.attendance_report') }}" class="nav-link">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Reports</span>
+    </a>
+
+    <div class="sidebar-bottom">
+        <a href="{{ url_for('auth.logout') }}" class="logout">
+            ↪ <span class="logout-text">Logout</span>
+        </a>
+    </div>
+
+</aside>
+
+<main class="main">
+
+    <div class="topbar">
+        <h2>Admin Dashboard</h2>
+        <div class="admin-badge">👤 Administrator</div>
+    </div>
+
+    <section class="welcome">
+        <h1>Welcome back, {{ current_user.name }}! 👋</h1>
+        <p>Manage your institution's attendance system from one place.</p>
+    </section>
+
+    <h3 class="section-heading">Management Overview</h3>
+
+    <section class="cards">
+
+        <div class="card">
+            <div class="card-icon purple">📊</div>
+            <h3>Attendance Reports</h3>
+            <p>View and monitor attendance records of all teachers and students.</p>
+            <a href="{{ url_for('admin_reports.attendance_report') }}">
+                View Reports →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon blue">🎓</div>
+            <h3>Student Management</h3>
+            <p>Add, view, update and manage student records.</p>
+            <a href="{{ url_for('student.student_list') }}">
+                Manage Students →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon green">👨‍🏫</div>
+            <h3>Teacher Management</h3>
+            <p>Manage teacher accounts and information.</p>
+            <a href="{{ url_for('teacher.teacher_list') }}">
+                Manage Teachers →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon orange">📚</div>
+            <h3>Subject Management</h3>
+            <p>Create subjects and assign teachers to subjects.</p>
+            <a href="{{ url_for('subject.subject_list') }}">
+                Manage Subjects →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon pink">📝</div>
+            <h3>Student Enrollments</h3>
+            <p>Enroll students into their respective subjects.</p>
+            <a href="{{ url_for('enrollment.enrollment_list') }}">
+                Manage Enrollments →
+            </a>
+        </div>
+
+    </section>
+
+    <div class="footer">
+        © 2026 SmartAttend AI · Smart Attendance Management System
+    </div>
+
+</main>
+
+</body>
+</html>

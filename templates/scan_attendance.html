@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            padding: 30px;
+        }
+        .container {
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 13px;
+            background: #263b80;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h2>Confirm Attendance</h2>
+
+    <p><strong>Student:</strong> {{ student.name }}</p>
+    <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+    <p><strong>Subject:</strong> {{ attendance_session.subject.subject_name }}</p>
+    <p><strong>Course:</strong> {{ attendance_session.course }}</p>
+    <p><strong>Semester:</strong> {{ attendance_session.semester }}</p>
+
+    <form method="POST">
+        <button type="submit">Mark My Attendance</button>
+    </form>
+
+</div>
+</body>
+</html>

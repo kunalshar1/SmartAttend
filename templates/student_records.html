@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Course Wise Student Records | SmartAttend AI</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .course-card {
+            background: white;
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #00000010;
+        }
+
+        h2, h3 {
+            color: #1e293b;
+        }
+
+        .course-info {
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #1e293b;
+            color: white;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 10px;
+            color: #64748b;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2>Course Wise Student Records</h2>
+        <p>Welcome, {{ current_user.name }}!</p>
+        <p class="course-info">
+            Students enrolled in your assigned subjects
+        </p>
+    </div>
+
+    {% if course_groups %}
+
+        {% for group, enrollments in course_groups.items() %}
+
+        <div class="course-card">
+
+            <h3>{{ group[0] }}</h3>
+
+            <p class="course-info">
+                Semester: {{ group[1] }}
+            </p>
+
+            <table>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Subject Code</th>
+                </tr>
+
+                {% for enrollment in enrollments %}
+                <tr>
+                    <td>{{ enrollment.student.name }}</td>
+                    <td>{{ enrollment.student.roll_number }}</td>
+                    <td>{{ enrollment.student.email }}</td>
+                    <td>{{ enrollment.subject.subject_name }}</td>
+                    <td>{{ enrollment.subject.subject_code }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+
+            <p class="course-info">
+                Total enrollment records: {{ enrollments|length }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+            <h3>No Students Found</h3>
+            <p>No students are enrolled in your assigned subjects yet.</p>
+        </div>
+
+    {% endif %}
+
+    <a class="back" href="{{ url_for('teacher_dashboard') }}">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Local database
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Testing cache
+.pytest_cache/
+# Generated QR codes
+static/qr_codes/

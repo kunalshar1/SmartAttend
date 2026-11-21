@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Records - SmartAttend AI</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #263b80;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .card p {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 12px 0 0;
+            color: #263b80;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        select, input, button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #263b80;
+            color: white;
+            cursor: pointer;
+        }
+
+        .session {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            min-width: 500px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #263b80;
+        }
+
+        .present {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #263b80;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Attendance Records & Reports</h2>
+
+    <!-- Summary -->
+    <div class="summary">
+
+        <div class="card">
+            <h3>Total Students</h3>
+            <p>{{ total_students }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Present</h3>
+            <p style="color: #15803d;">{{ total_present }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Absent</h3>
+            <p style="color: #dc2626;">{{ total_absent }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Attendance Percentage</h3>
+            <p>{{ percentage }}%</p>
+        </div>
+
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+
+        <form method="GET">
+
+            <!-- Subject Dropdown -->
+            <select name="subject_id">
+                <option value="">All Subjects</option>
+
+                {% for subject in subjects %}
+                <option value="{{ subject.id }}"
+                    {% if selected_subject|string == subject.id|string %}selected{% endif %}>
+                    {{ subject.subject_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <!-- Course Dropdown -->
+            <select name="course">
+                <option value="">All Courses</option>
+
+                {% for course in courses %}
+                <option value="{{ course.course_name }}"
+                    {% if selected_course == course.course_name %}selected{% endif %}>
+                    {{ course.course_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <!-- Semester Dropdown -->
+            <select name="semester">
+                <option value="">All Semesters</option>
+
+                {% for sem in semesters %}
+                <option value="{{ sem }}"
+                    {% if selected_semester == sem %}selected{% endif %}>
+                    {{ sem }} Semester
+                </option>
+                {% endfor %}
+            </select>
+
+            <!-- Date Filter -->
+            <input
+                type="date"
+                name="date"
+                value="{{ selected_date }}"
+            >
+
+            <button type="submit">Apply Filters</button>
+
+            <a href="{{ url_for('teacher.attendance_records') }}">
+                Reset
+            </a>
+
+        </form>
+
+    </div>
+
+    <!-- Session Reports -->
+    {% if reports %}
+
+        {% for report in reports %}
+
+        <div class="session">
+
+            <h3>{{ report.subject.subject_name }}</h3>
+
+            <p><strong>Course:</strong> {{ report.session.course }}</p>
+            <p><strong>Semester:</strong> {{ report.session.semester }}</p>
+
+            <p>
+                <strong>Date:</strong>
+                {{ report.session.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+            </p>
+
+            <p><strong>Total:</strong> {{ report.total_students }}</p>
+            <p><strong>Present:</strong> {{ report.present }}</p>
+            <p><strong>Absent:</strong> {{ report.absent }}</p>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Roll Number</th>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in report.students %}
+
+                    <tr>
+                        <td>{{ row.student.roll_number }}</td>
+                        <td>{{ row.student.name }}</td>
+                        <td>{{ row.student.email }}</td>
+
+                        <td>
+                            {% if row.status == "Present" %}
+                                <span class="present">Present</span>
+                            {% else %}
+                                <span class="absent">Absent</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+            <h3>No Attendance Records Found</h3>
+            <p>Start an attendance session to see reports here.</p>
+        </div>
+
+    {% endif %}
+
+    <a class="back" href="{{ url_for('teacher.my_subjects') }}">
+        Back to My Subjects
+    </a>
+
+</div>
+
+</body>
+</html>

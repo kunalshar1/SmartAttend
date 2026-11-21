@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            padding: 30px;
+        }
+        .container {
+            max-width: 450px;
+            margin: 70px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+        }
+        h2 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Attendance Marked Successfully!</h2>
+
+    <p>Student: {{ student.name }}</p>
+    <p>Roll Number: {{ student.roll_number }}</p>
+    <p>Subject: {{ attendance_session.subject.subject_name }}</p>
+
+    <p>Your attendance has been recorded.</p>
+
+    <a href="{{ url_for('student_dashboard') }}">Back to Dashboard</a>
+</div>
+</body>
+</html>

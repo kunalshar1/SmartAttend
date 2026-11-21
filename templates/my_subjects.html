@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Subjects - SmartAttend AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>My Assigned Subjects</h2>
+
+    <p>Welcome, {{ current_user.name }}!</p>
+
+    {% if subjects %}
+    <table>
+        <tr>
+            <th>Subject Name</th>
+            <th>Subject Code</th>
+            <th>Course</th>
+            <th>Semester</th>
+        </tr>
+
+        {% for subject in subjects %}
+        <tr>
+            <td>{{ subject.subject_name }}</td>
+            <td>{{ subject.subject_code }}</td>
+            <td>{{ subject.course }}</td>
+            <td>{{ subject.semester }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% else %}
+        <p>No subjects have been assigned to you yet.</p>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('teacher_dashboard') }}">Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>

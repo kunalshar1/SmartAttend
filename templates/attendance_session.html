@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance QR Code - SmartAttend AI</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #263b80;
+        }
+
+        img {
+            width: 250px;
+            height: 250px;
+            margin: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .details {
+            line-height: 2;
+            color: #444;
+        }
+
+        .warning {
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #263b80;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        #countdown-box {
+            background: #eef2ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 250px;
+            color: #263b80;
+        }
+
+        #countdown {
+            font-size: 40px;
+            margin: 5px;
+            color: #16a34a;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Attendance Session Started!</h2>
+
+    <div class="details">
+        <p><strong>Subject:</strong> {{ subject.subject_name }}</p>
+        <p><strong>Course:</strong> {{ session.course }}</p>
+        <p><strong>Semester:</strong> {{ session.semester }}</p>
+        <p><strong>Eligible Students:</strong> {{ eligible_students }}</p>
+
+        <p>
+            <strong>Expires At (IST):</strong>
+            {{ ist_expiry.strftime('%d-%m-%Y %I:%M:%S %p') }}
+        </p>
+    </div>
+
+    <h3>Scan QR Code to Mark Attendance</h3>
+
+    <!-- QR Code Image -->
+    <img
+        src="{{ url_for('static', filename=qr_path) }}"
+        alt="Attendance QR Code"
+        width="250"
+        height="250"
+    >
+
+    <!-- Countdown -->
+    <div id="countdown-box">
+        <p>Time Remaining</p>
+        <h1 id="countdown">00:00</h1>
+    </div>
+
+    <p class="warning">
+        This QR code expires automatically after the selected duration.
+    </p>
+
+    <a href="{{ url_for('teacher_dashboard') }}">
+        Back to Dashboard
+    </a>
+
+</div>
+
+<script>
+    let remainingSeconds = {{ remaining_seconds }};
+
+    const countdown = document.getElementById("countdown");
+    const countdownBox = document.getElementById("countdown-box");
+
+    function updateCountdown() {
+
+        if (remainingSeconds <= 0) {
+            countdownBox.innerHTML = "<h2>QR Code Expired!</h2>";
+            return;
+        }
+
+        let minutes = Math.floor(remainingSeconds / 60);
+        let seconds = remainingSeconds % 60;
+
+        countdown.textContent =
+            String(minutes).padStart(2, "0") + ":" +
+            String(seconds).padStart(2, "0");
+
+        remainingSeconds--;
+    }
+
+    updateCountdown();
+
+    const countdownInterval = setInterval(() => {
+        updateCountdown();
+
+        if (remainingSeconds <= 0) {
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

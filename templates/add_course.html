@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Course - SmartAttend AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 30px 15px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+        }
+
+        .header {
+            background: linear-gradient(120deg, #1e1b4b, #4338ca, #7c3aed);
+            color: white;
+            padding: 30px;
+            border-radius: 18px 18px 0 0;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #e0e7ff;
+            font-size: 14px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 32px;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+        }
+
+        .form-title {
+            font-size: 19px;
+            margin-bottom: 25px;
+            color: #1e293b;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dbe1ea;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #1e293b;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #6366f1;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .hint {
+            display: block;
+            margin-top: 8px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(120deg, #312e81, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.25);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 23px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 500px) {
+            .form-card {
+                padding: 23px;
+            }
+
+            .header {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>＋ Add New Course</h1>
+        <p>Create a new course in SmartAttend AI.</p>
+    </div>
+
+    <div class="form-card">
+
+        <h2 class="form-title">Course Information</h2>
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label>Course Name</label>
+
+                <input
+                    type="text"
+                    name="course_name"
+                    placeholder="Example: B.Tech CSE"
+                    required
+                >
+
+                <span class="hint">
+                    Enter the full course name, such as BCA, MCA or B.Tech CSE.
+                </span>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Add Course
+            </button>
+
+        </form>
+
+        <a class="back-link"
+           href="{{ url_for('course.course_list') }}">
+            ← Back to Course Management
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

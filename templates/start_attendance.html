@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Attendance - SmartAttend AI</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #263b80;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #263b80;
+            color: white;
+            border: none;
+            margin-top: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #18285e;
+        }
+
+        .flash {
+            padding: 10px;
+            background: #ffe5e5;
+            color: #a00000;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Start Attendance Session</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <label>Select Subject</label>
+        <select name="subject_id" required>
+            <option value="">-- Select Subject --</option>
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}">
+                    {{ subject.subject_name }} ({{ subject.subject_code }})
+                </option>
+            {% endfor %}
+        </select>
+
+        <label>Select Course / Department</label>
+        <select name="course" required>
+            <option value="">-- Select Course --</option>
+            {% for course in courses %}
+<option value="{{ course.course_name }}">
+    {{ course.course_name }}
+</option>
+{% endfor %}
+        </select>
+
+        <label>Select Semester</label>
+        <select name="semester" required>
+    <option value="">-- Select Semester --</option>
+
+    {% for sem in semesters %}
+    <option value="{{ sem }}">{{ sem }} Semester</option>
+    {% endfor %}
+
+</select>
+
+        <label>QR Code Validity</label>
+        <select name="duration" required>
+            <option value="5">5 Minutes</option>
+            <option value="10" selected>10 Minutes</option>
+            <option value="15">15 Minutes</option>
+            <option value="30">30 Minutes</option>
+            <option value="60">60 Minutes</option>
+        </select>
+
+        <button type="submit">Start Attendance</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

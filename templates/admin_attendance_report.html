@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Attendance Reports | SmartAttend AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #1e293b;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            background: #475569;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .filters, .summary, .report {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 10px #00000010;
+        }
+
+        .filters h3, .report h3 {
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-card {
+            padding: 18px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .summary-card h3 {
+            color: #64748b;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .summary-card p {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .present {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            header {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>SmartAttend AI - Attendance Reports</h2>
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</header>
+
+<div class="container">
+
+    <h1 style="margin-bottom: 10px;">Admin Attendance Reports</h1>
+    <p style="margin-bottom: 25px; color: #64748b;">
+        Monitor attendance records of all teachers and students.
+    </p>
+
+    <div class="filters">
+        <h3>Filter Attendance</h3>
+
+        <form method="GET">
+
+            <div>
+                <label>Subject</label>
+                <select name="subject_id">
+                    <option value="">All Subjects</option>
+                    {% for subject in subjects %}
+                    <option value="{{ subject.id }}"
+                        {% if selected_subject == subject.id %}selected{% endif %}>
+                        {{ subject.subject_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label>Teacher</label>
+                <select name="teacher_id">
+                    <option value="">All Teachers</option>
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}"
+                        {% if selected_teacher == teacher.id %}selected{% endif %}>
+                        {{ teacher.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label>Course</label>
+                <select name="course">
+                    <option value="">All Courses</option>
+                    {% for course in courses %}
+                    <option value="{{ course.course_name }}"
+                        {% if selected_course == course.course_name %}selected{% endif %}>
+                        {{ course.course_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label>Semester</label>
+                <select name="semester">
+                    <option value="">All Semesters</option>
+                    {% for sem in semesters %}
+                    <option value="{{ sem }}"
+                        {% if selected_semester == sem %}selected{% endif %}>
+                        {{ sem }} Semester
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label>Date</label>
+                <input type="date" name="date" value="{{ selected_date }}">
+            </div>
+
+            <div style="display:flex; gap:10px; align-items:end;">
+                <button type="submit">Apply Filters</button>
+                <a href="{{ url_for('admin_reports.attendance_report') }}"
+                   style="padding:11px; color:#2563eb; text-decoration:none;">
+                    Reset
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="summary">
+
+        <div class="summary-card">
+            <h3>Total Attendance Entries</h3>
+            <p>{{ total_students }}</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Present</h3>
+            <p class="present">{{ total_present }}</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Absent</h3>
+            <p class="absent">{{ total_absent }}</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Attendance Percentage</h3>
+            <p>{{ percentage }}%</p>
+        </div>
+
+    </div>
+
+    {% if reports %}
+
+        {% for report in reports %}
+
+        <div class="report">
+
+            <h3>{{ report.subject.subject_name }}</h3>
+
+            <p><strong>Teacher:</strong> {{ report.teacher.name }}</p>
+            <p><strong>Course:</strong> {{ report.session.course }}</p>
+            <p><strong>Semester:</strong> {{ report.session.semester }}</p>
+            <p><strong>Date:</strong> {{ report.session.created_at.strftime('%d-%m-%Y %I:%M %p') }}</p>
+
+            <p style="margin: 12px 0;">
+                <strong>Total:</strong> {{ report.total_students }}
+                &nbsp; | &nbsp;
+                <span class="present">Present: {{ report.present }}</span>
+                &nbsp; | &nbsp;
+                <span class="absent">Absent: {{ report.absent }}</span>
+            </p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Student Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for row in report.students %}
+                        <tr>
+                            <td>{{ row.student.roll_number }}</td>
+                            <td>{{ row.student.name }}</td>
+                            <td>{{ row.student.email }}</td>
+                            <td class="{{ 'present' if row.status == 'Present' else 'absent' }}">
+                                {{ row.status }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="report empty">
+            <h3>No Attendance Records Found</h3>
+            <p>Attendance reports will appear here after teachers complete attendance sessions.</p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
