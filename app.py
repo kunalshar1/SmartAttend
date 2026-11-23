@@ -20,22 +20,37 @@ from models.course import Course
 from routes.course import course_bp
 from routes.admin_reports import admin_reports_bp
 from models.attendance import Attendance, AttendanceSession
-app = Flask(__name__)
+
 from routes.qr_attendance import qr_attendance_bp
 from routes.admin_reports import admin_reports_bp
 # Flask configuration
+app = Flask(__name__)
+
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+
+if not app.config["SECRET_KEY"]:
+    raise RuntimeError("SECRET_KEY is not configured. Set it before starting the application.")
 # Database configuration
+
 database_url = os.environ.get("DATABASE_URL")
 
-if database_url and database_url.startswith("postgres://"):
-    database_url = database_url.replace(
-        "postgres://", "postgresql://", 1
-    )
+if database_url:
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace(
+            "postgres://",
+            "postgresql+psycopg2://",
+            1
+        )
+    elif database_url.startswith("postgresql://"):
+        database_url = database_url.replace(
+            "postgresql://",
+            "postgresql+psycopg2://",
+            1
+        )
 
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    database_url or "sqlite:///attendance.db"
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url or "sqlite:///attendance.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
