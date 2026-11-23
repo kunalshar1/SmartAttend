@@ -191,7 +191,54 @@ def health():
         "status": "success",
         "message": "SmartAttend AI backend is running!"
     }
+# Temporary Admin Setup Route
+@app.route("/setup-admin", methods=["POST"])
+def setup_admin():
 
+    from flask import request, jsonify
+    from werkzeug.security import generate_password_hash
+
+    setup_token = os.environ.get("ADMIN_SETUP_TOKEN")
+    submitted_token = request.headers.get("X-Setup-Token")
+
+    if not setup_token or submitted_token != setup_token:
+        abort(403)
+
+    if User.query.filter_by(role="admin").first():
+        return jsonify({
+            "error": "An admin account already exists."
+        }), 409
+
+    data = request.get_json(silent=True) or {}
+
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "")
+
+    if not name or not email or len(password) < 8:
+        return jsonify({
+            "error": "Enter a name, valid email and password of at least 8 characters."
+        }), 400
+
+    if User.query.filter_by(email=email).first():
+        return jsonify({
+            "error": "This email is already registered."
+        }), 409
+
+    admin = User(
+        name=name,
+        email=email,
+        role="admin"
+    )
+
+    admin.set_password(password)
+
+    db.session.add(admin)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Admin account created successfully!"
+    }), 201
 
 # Create database tables
 with app.app_context():
